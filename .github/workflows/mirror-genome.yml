@@ -1,0 +1,44 @@
+name: Mirror pinned T2T-CHM13v2.0 reference
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: genome-release-t2t-chm13v2
+  cancel-in-progress: false
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Verify exact upstream URLs and download
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p dist
+          curl --fail --location --retry 5 --retry-all-errors --connect-timeout 20 -o dist/hs1.fa.gz 'https://hgdownload.soe.ucsc.edu/goldenPath/hs1/bigZips/hs1.fa.gz'
+          curl --fail --location --retry 5 --retry-all-errors --connect-timeout 20 -o dist/hs1.chrom.sizes.txt 'https://hgdownload.soe.ucsc.edu/goldenPath/hs1/bigZips/hs1.chrom.sizes.txt'
+          curl --fail --location --retry 5 --retry-all-errors --connect-timeout 20 -o dist/hs1.ncbiRefSeq.gtf.gz 'https://hgdownload.soe.ucsc.edu/goldenPath/hs1/bigZips/genes/hs1.ncbiRefSeq.gtf.gz'
+          python3 scripts/verify_data.py dist
+      - name: Publish verified snapshot (never overwrite)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          tag='data-t2t-chm13v2.0-hs1-v1'
+          if gh release view "$tag" >/dev/null 2>&1; then
+            echo "Release $tag already exists; refusing to overwrite"; exit 1
+          fi
+          gh release create "$tag" \
+            dist/hs1.fa.gz \
+            dist/hs1.chrom.sizes.txt \
+            dist/hs1.ncbiRefSeq.gtf.gz \
+            dist/SHA256SUMS \
+            dist/DATA_PROVENANCE.json \
+            --title 'T2T-CHM13v2.0 / hs1 verified reference snapshot' \
+            --notes 'Pinned UCSC hs1 FASTA + chromosome sizes + RefSeq GTF. SHA-256 and provenance included. Full content and compressed-file checks performed before publishing. Data sources and licenses: see README.' \
+            --latest=false

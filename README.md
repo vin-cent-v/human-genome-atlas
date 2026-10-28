@@ -1,32 +1,22 @@
-# Human Genome Atlas · 人类基因组知识地图
+# 人类基因组知识地图 / Human Genome Atlas
 
-An interactive Chinese-language educational atlas for human reference genome T2T-CHM13v2.0 / UCSC hs1.
+**[在线页面源码](index.html)** — 下载 HTML 后可离线打开。公开网页可在 GitHub 仓库 Settings → Pages → Deploy from a branch → main / root 启用。
 
-## Explore
+## 已提交
+- [交互式知识地图](index.html)：25 条参考序列、9 个主题、19 个教学基因案例、官方 GTF 导入与 FASTA+FAI 局部读取。
+- [固定官方来源与 MD5](data/catalog.json)：T2T-CHM13v2.0、UCSC hs1、GCA_009914755.4。
+- [校验脚本](scripts/verify_data.py)：数据 MD5、全部 FASTA 序列长度、25 条序列总长度、GTF 格式、SHA256 来源记录。
+- [手动触发镜像工作流](.github/workflows/mirror-genome.yml)：下载约 930 MB FASTA、染色体长度表与约 37 MB RefSeq GTF，并在通过验证后创建 Release。
 
-- Open [index.html](./index.html) for the chromosome map, gene-function teaching cases and on-demand base sequence reader.
-- 25 reference sequences: chromosomes 1–22, X, HG002-derived Y and mitochondrial reference; 3,117,292,070 bases.
-- The atlas starts offline. Real online sequence requests require UCSC; local full FASTA requires an uncompressed file and matching .fai. Only 19 gene-function examples are bundled, not all annotated genes.
+## 下载完整官方数据
+打开 **Actions → Mirror pinned T2T-CHM13v2.0 reference → Run workflow**，工作流执行成功后到 [Releases](../../releases) 下载。工作流绝不覆盖同名 Release。
 
-## Reproducible data mirror
+**注意：仓库中的工作流配置与真正的大型 DNA 镜像是两回事。未见 Release 和完整性验证结果之前，不宣称镜像已经完成。**
 
-- [Pinned data catalog](data/catalog.json) and [integrity-check script](scripts/verify_data.py).
-- Run [Mirror verified T2T-CHM13v2.0 reference](../../actions/workflows/mirror-genome.yml) manually from GitHub Actions.
-- The workflow downloads exactly: hs1.fa.gz (about 930MB), hs1.chrom.sizes.txt, hs1.ncbiRefSeq.gtf.gz (about 37MB).
-- Source MD5 verification, full streamed FASTA base-length audit and GTF format check are mandatory before publication.
-- On success, GitHub Release t2t-chm13v2.0-data-v1 contains these files plus SHA256SUMS and DATA_PROVENANCE.json. An existing release is never silently overwritten.
-- HPRC is linked rather than fully mirrored. Do not upload any private personal DNA data to this public repository.
+## 来源
+- [UCSC hs1 参考数据目录](https://hgdownload.soe.ucsc.edu/goldenPath/hs1/bigZips/)
+- [T2T Consortium](https://github.com/marbl/CHM13)
+- [NCBI GCA_009914755.4](https://www.ncbi.nlm.nih.gov/datasets/genome/GCA_009914755.4/)
+- [HPRC 泛基因组](https://www.humanpangenome.org/data/)（只提供官方链接，未镜像）
 
-## Optional public site
-
-GitHub repo Settings → Pages → Build and deployment → Deploy from a branch → main / (root) → Save. Once deployed: https://vin-cent-v.github.io/human-genome-atlas/
-
-## Provenance and scientific accuracy
-
-- [T2T CHM13 project](https://github.com/marbl/CHM13)
-- [UCSC hs1 assembly](https://genome.ucsc.edu/cgi-bin/hgGateway?db=hs1)
-- [UCSC hs1 downloads](https://hgdownload.soe.ucsc.edu/goldenPath/hs1/bigZips/)
-- [NCBI assembly GCA_009914755.4](https://www.ncbi.nlm.nih.gov/datasets/genome/GCA_009914755.4/)
-- [HPRC data](https://www.humanpangenome.org/data/)
-
-The T2T consortium's released reference genome data are CC0. That does not automatically license this separately authored HTML code and teaching text as CC0. Preserve source attribution and check all upstream licenses. This is science education, not a clinical diagnostic tool.
+本知识地图以可核查的参考基因组坐标为底座；它不是一个人的完整二倍体基因组，也不是所有 DNA 功能均被破解的证明。此科普内容不提供个人医疗诊断。

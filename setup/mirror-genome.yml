@@ -1,0 +1,39 @@
+name: Mirror verified T2T-CHM13v2.0 reference
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: verified-genome-release
+  cancel-in-progress: false
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - name: Refuse to overwrite any existing release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view t2t-chm13v2.0-data-v1 >/dev/null 2>&1; then
+            echo 'Release already exists, refusing to overwrite' >&2
+            exit 1
+          fi
+      - name: Download fixed official UCSC data
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p dist
+          base='https://hgdownload.soe.ucsc.edu/goldenPath/hs1/bigZips'
+          curl -fL --retry 6 --retry-all-errors --connect-timeout 30 -o dist/hs1.fa.gz "$base/hs1.fa.gz"
+          curl -fL --retry 6 --retry-all-errors --connect-timeout 30 -o dist/hs1.chrom.sizes.txt "$base/hs1.chrom.sizes.txt"
+          curl -fL --retry 6 --retry-all-errors --connect-timeout 30 -o dist/hs1.ncbiRefSeq.gtf.gz "$base/genes/hs1.ncbiRefSeq.gtf.gz"
+      - name: Verify fixed MD5, full FASTA and GTF and write SHA256 provenance
+        run: python3 scripts/verify_data.py dist
+      - name: Create verified GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh release create t2t-chm13v2.0-data-v1 dist/hs1.fa.gz dist/hs1.chrom.sizes.txt dist/hs1.ncbiRefSeq.gtf.gz dist/SHA256SUMS dist/DATA_PROVENANCE.json --title 'Verified T2T-CHM13v2.0 hs1 reference data' --notes 'Pinned official UCSC hs1 FASTA, chromosomes and NCBI RefSeq GTF with verified MD5, full FASTA length audit and SHA256 provenance.'

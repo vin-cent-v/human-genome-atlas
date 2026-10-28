@@ -1,0 +1,52 @@
+{
+  "schema": "human-genome-atlas.catalog.v1",
+  "reference": {
+    "name": "T2T-CHM13v2.0",
+    "ucsc_assembly": "hs1",
+    "accession": "GCA_009914755.4",
+    "nuclear_chromosome_types": 24,
+    "contigs_including_mitochondrial": 25,
+    "bases": 3117292070,
+    "notes": "CHM13 nuclear reference with HG002-derived Y chromosome; not one person's diploid genome"
+  },
+  "mirror_files": [
+    {
+      "file": "hs1.fa.gz",
+      "role": "full compressed reference FASTA",
+      "url": "https://hgdownload.soe.ucsc.edu/goldenPath/hs1/bigZips/hs1.fa.gz",
+      "md5": "a493d5402cc86ecc3f54f6346d980036"
+    },
+    {
+      "file": "hs1.chrom.sizes.txt",
+      "role": "25 reference sequence lengths",
+      "url": "https://hgdownload.soe.ucsc.edu/goldenPath/hs1/bigZips/hs1.chrom.sizes.txt",
+      "md5": "12669b911f5cf251c2e83f8240c1c74a"
+    },
+    {
+      "file": "hs1.ncbiRefSeq.gtf.gz",
+      "role": "RefSeq gene models snapshot (2023-05-29)",
+      "url": "https://hgdownload.soe.ucsc.edu/goldenPath/hs1/bigZips/genes/hs1.ncbiRefSeq.gtf.gz",
+      "md5": "bd7063efcbfed4774d9be42db8173a6e",
+      "checksum_reference": "https://grr.seqpipe.org/hs1/gene_models/ncbiRefSeq_20250529/index.html"
+    }
+  ],
+  "supplemental_public_sources": [
+    {
+      "name": "T2T project",
+      "url": "https://github.com/marbl/CHM13",
+      "mirror_policy": "link_only"
+    },
+    {
+      "name": "NCBI Assembly",
+      "url": "https://www.ncbi.nlm.nih.gov/datasets/genome/GCA_009914755.4/",
+      "mirror_policy": "link_only"
+    },
+    {
+      "name": "HPRC data",
+      "url": "https://www.humanpangenome.org/data/",
+      "mirror_policy": "link_only"
+    }
+  ],
+  "source_checksums": "https://hgdownload.soe.ucsc.edu/goldenPath/hs1/bigZips/md5sum.txt",
+  "policy": "Only these 3 exact official files are mirrored. HPRC raw reads and all other genome datasets are not mirrored."
+}
